@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0B0F14;
+  --color-foreground: #EAF0F6;
+  
+  --color-canvas: #0B0F14;
+  --color-glass: #151C25;
+  --color-raised: #1C2632;
+  
+  --color-card: #151C25;
+  --color-card-foreground: #EAF0F6;
+  
+  --color-primary: #60F1D0;
+  --color-primary-foreground: #0B0F14;
+  
+  --color-secondary: #1C2632;
+  --color-secondary-foreground: #EAF0F6;
+  
+  --color-muted: #151C25;
+  --color-muted-foreground: #A8B4C2;
+  
+  --color-accent: #1C2632;
+  --color-accent-foreground: #60F1D0;
+  
+  /* ECDAT Domain-Specific Tokens */
+  --color-evidence: #60F1D0;
+  --color-analysis: #8B7CFF;
+  --color-data: #75B7FF;
+  --color-key: #FFBF72;
+  --color-scenario: #E8A1FF;
+  --color-mismatch: #FF7A90;
+  
+  --color-destructive: #FF7A90;
+  --color-destructive-foreground: #0B0F14;
+  
+  --color-border: rgba(168, 180, 194, 0.15);
+  --color-input: rgba(168, 180, 194, 0.2);
+  --color-ring: #60F1D0;
+  
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    border-color: rgba(168, 180, 194, 0.15);
+  }
+  body {
+    background-color: #0B0F14;
+    color: #EAF0F6;
+    font-family: inherit;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: rgba(96, 241, 208, 0.25);
+    color: #EAF0F6;
+  }
+}
+
+/* Spatial Glass Panel Styles */
+.panel {
+  background-color: #151C25;
+  border: 1px solid rgba(168, 180, 194, 0.15);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+}
+
+.panel-raised {
+  background-color: #1C2632;
+  border: 1px solid rgba(168, 180, 194, 0.2);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6);
+}
+
+.panel-header {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid rgba(168, 180, 194, 0.12);
+  background: linear-gradient(to bottom, rgba(28, 38, 50, 0.7), rgba(21, 28, 37, 0.7));
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.panel-body {
+  padding: 1.25rem;
+}
+
+/* Investigation Console Data Table Styles */
+.data-table {
+  width: 100%;
+  font-size: 0.8125rem;
+  text-align: left;
+  color: #EAF0F6;
+}
+
+.data-table th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.6875rem;
+  color: #A8B4C2;
+  background-color: #1C2632;
+  border-bottom: 1px solid rgba(168, 180, 194, 0.15);
+}
+
+.data-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid rgba(168, 180, 194, 0.08);
+  color: #EAF0F6;
+  vertical-align: middle;
+  transition: background-color 150ms ease;
+}
+
+.data-table tr:hover td {
+  background-color: rgba(28, 38, 50, 0.65);
+}
+
+/* Restrained Domain Status Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  border: 1px solid transparent;
+  transition: all 150ms ease;
+}
+
+.badge-neutral {
+  background-color: rgba(168, 180, 194, 0.1);
+  color: #A8B4C2;
+  border-color: rgba(168, 180, 194, 0.2);
+}
+
+.badge-success {
+  background-color: rgba(96, 241, 208, 0.12);
+  color: #60F1D0;
+  border-color: rgba(96, 241, 208, 0.3);
+}
+
+.badge-warning {
+  background-color: rgba(255, 191, 114, 0.12);
+  color: #FFBF72;
+  border-color: rgba(255, 191, 114, 0.3);
+}
+
+.badge-danger {
+  background-color: rgba(255, 122, 144, 0.12);
+  color: #FF7A90;
+  border-color: rgba(255, 122, 144, 0.3);
+}
+
+.badge-analysis {
+  background-color: rgba(139, 124, 255, 0.12);
+  color: #8B7CFF;
+  border-color: rgba(139, 124, 255, 0.3);
+}
+
+.badge-data {
+  background-color: rgba(117, 183, 255, 0.12);
+  color: #75B7FF;
+  border-color: rgba(117, 183, 255, 0.3);
+}
+
+.badge-unknown {
+  background-color: rgba(168, 180, 194, 0.05);
+  color: #A8B4C2;
+  border-color: rgba(168, 180, 194, 0.2);
+  border-style: dashed;
+}

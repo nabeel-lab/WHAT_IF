@@ -1,0 +1,42 @@
+# Environment variables & secrets (CRITICAL: Never commit)
+.env
+.env*
+*.env
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Database & runtime state
+ecdat.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Local external fixtures & scratch
+Enterprise_info/
+test_tmp_clone/
+scratch/
+*.log
+*.tmp
+*.docx
+
+# Local LLM weights & heavy native binaries
+services/api/llama_cpp/
+services/api/models/
+*.gguf
+*.exe
+*.dll
+*.zip
+

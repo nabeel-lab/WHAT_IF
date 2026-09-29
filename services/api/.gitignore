@@ -1,0 +1,13 @@
+# Model weights — never commit
+services/api/models/
+*.gguf
+
+# llama.cpp binaries
+services/api/llama_cpp/
+
+# Enterprise docs store (runtime data)
+enterprise_docs/
+
+# LLM startup scripts (generated)
+services/api/start_llm_server.bat
+services/api/start_llm_server.ps1

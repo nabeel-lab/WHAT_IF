@@ -1,0 +1,40 @@
+rules:
+  - id: PY-RSA-001
+    languages: [python]
+    severity: INFO
+    message: "Direct RSA encryption operation detected"
+    metadata:
+      category: crypto
+      algorithm: RSA
+      role: encryption
+      confidence: HIGH
+    patterns:
+      - pattern: rsa.encrypt(...)
+
+  - id: PY-RSA-002
+    languages: [python]
+    severity: INFO
+    message: "RSA primitive construction detected"
+    metadata:
+      category: crypto
+      algorithm: RSA
+      role: key generation
+      confidence: MEDIUM
+    patterns:
+      - pattern-either:
+          - pattern: rsa.generate_private_key(...)
+          - pattern: cryptography.hazmat.primitives.asymmetric.rsa.generate_private_key(...)
+
+  - id: PY-RSA-003
+    languages: [python]
+    severity: INFO
+    message: "RSA library import detected"
+    metadata:
+      category: crypto
+      algorithm: RSA
+      role: unknown
+      confidence: LOW
+    patterns:
+      - pattern-either:
+          - pattern: import rsa
+          - pattern: from cryptography.hazmat.primitives.asymmetric import rsa
