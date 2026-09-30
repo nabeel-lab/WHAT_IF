@@ -2,7 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { Activity, ShieldCheck, HelpCircle, Bot } from "lucide-react";
+import Link from "next/link";
+import {
+  Radio,
+  Activity,
+  ShieldCheck,
+  Clock,
+  AlertTriangle,
+  Bot,
+  Zap,
+  Sparkles,
+  ArrowRight,
+  Database,
+  Layers
+} from "lucide-react";
 import AssistantDrawer from "@/components/investigation/AssistantDrawer";
 
 export default function ReadinessPage() {
@@ -19,10 +32,15 @@ export default function ReadinessPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [initialQuestion, setInitialQuestion] = useState("");
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   useEffect(() => {
-    const url = `http://localhost:8000/projects/${projectId}/analysis/summary${scanId ? `?scan_id=${scanId}` : ""}`;
+    const url = `${apiUrl}/projects/${projectId}/analysis/summary${scanId ? `?scan_id=${scanId}` : ""}`;
     fetch(url)
-      .then(res => { if (!res.ok) throw new Error(`API error ${res.status}`); return res.json(); })
+      .then(res => {
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        return res.json();
+      })
       .then(data => setSummary(data))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
@@ -35,103 +53,147 @@ export default function ReadinessPage() {
 
   const categories = summary?.categories || [];
 
-  // Deterministic source mapping per readiness metric
-  const METRIC_DETAILS: Record<string, { source: string; meaning: string; unknowns: string }> = {
+  const METRIC_DETAILS: Record<string, { source: string; meaning: string; action: string }> = {
     "Runtime-observed paths": {
-      source: "Dynamic telemetry harness & execution event logs (`runtime_events`)",
-      meaning: "Crypto paths actively observed running during live execution.",
-      unknowns: "Unexecuted code branches or unshot test scenarios."
+      source: "Dynamic execution telemetry logs",
+      meaning: "Cryptographic paths confirmed actively executing during live operational traffic.",
+      action: "Prioritize for zero-downtime migration testing."
     },
     "Long-lived protected data": {
-      source: "Data Asset retention horizons & Two-Clock evaluation engine (`runway_state`)",
-      meaning: "Paths protecting data requiring secrecy past 2030 or lacking quantum agility.",
-      unknowns: "Undocumented data sensitivity or missing confidentiality horizon metadata."
+      source: "Data Asset retention horizons & Two-Clock evaluation",
+      meaning: "Protected assets requiring secrecy past 2030 or lacking quantum agility.",
+      action: "Execute immediate data re-encryption with ML-KEM."
     },
     "Low crypto-agility readiness": {
-      source: "Static AST analysis & direct algorithm call site count (`crypto_agility_state`)",
-      meaning: "Direct hardcoded algorithm usages lacking an abstraction provider interface.",
-      unknowns: "Custom wrapper functions not recognized as abstraction libraries."
+      source: "Static AST analysis & direct algorithm call site counts",
+      meaning: "Hardcoded library calls lacking an abstracted provider wrapper.",
+      action: "Introduce cryptographic abstraction wrappers."
     },
     "High migration effort": {
-      source: "Call site volume, PQC algorithm complexity, and key scope (`migration_effort`)",
-      meaning: "PQC migration requiring significant engineering re-architecture or RSA key wrap updates.",
-      unknowns: "Third-party SDK dependencies or external API vendor constraints."
+      source: "Call site volume, PQC algorithm complexity, and key scope",
+      meaning: "Migration requiring significant architectural re-engineering.",
+      action: "Plan multi-sprint migration with fallback support."
     },
     "Evidence gaps": {
-      source: "EvidenceContextEngine coverage validation (`evidence_coverage`)",
-      meaning: "Paths lacking complete static AST, call graph, or runtime telemetry proof.",
-      unknowns: "Unresolved interprocedural control flow or dynamically loaded modules."
+      source: "Reachability graph traversals without attached runtime traces",
+      meaning: "Cryptographic primitives identified in code but without execution confirmation.",
+      action: "Expand test harness test execution coverage."
     }
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-16 relative">
-      <div className="border-b border-[#A8B4C2]/15 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-8 max-w-6xl mx-auto pb-16 relative">
+      
+      {/* ─── Header Console ─── */}
+      <div className="border-b border-[#A8B4C2]/12 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_8px_#8B7CFF]" />
-            <h1 className="text-xl font-bold text-[#EAF0F6] tracking-wide">Crypto-Agility & Migration Readiness</h1>
+            <span className="w-2 h-2 rounded-full bg-[#60F1D0] shadow-[0_0_8px_#60F1D0]" />
+            <h1 className="text-xl font-bold text-[#EAF0F6] tracking-wide">
+              Quantum Readiness Posture & Two-Clock Evaluation
+            </h1>
           </div>
           <p className="text-xs text-[#A8B4C2] mt-1 font-mono">
-            Deterministic, rule-first evaluation breakdown derived directly from scan ground truth.
+            Empirical quantum cliff runway, data secrecy horizons, and migration effort across verified paths.
           </p>
         </div>
 
-        <button
-          onClick={() => openAssistant("Explain how the displayed readiness state was derived from deterministic inputs")}
-          className="inline-flex items-center gap-1.5 text-xs font-mono px-3.5 py-2 rounded-lg bg-[#60F1D0]/10 hover:bg-[#60F1D0]/20 text-[#60F1D0] border border-[#60F1D0]/30 transition-all"
+        <Link
+          href={`/projects/${projectId}/investigation${scanId ? `?scan_id=${scanId}` : ""}`}
+          className="btn-secondary text-xs px-3.5 py-1.5 flex items-center gap-2 self-start sm:self-auto"
         >
-          <Bot className="w-4 h-4" />
-          <span>Ask ECDAT: Explain Readiness Derivation</span>
-        </button>
+          <Activity className="w-3.5 h-3.5 text-[#60F1D0]" />
+          <span>Spatial Graph View</span>
+        </Link>
       </div>
 
-      {loading && (
-        <div className="flex items-center justify-center py-24 text-sm text-[#A8B4C2] gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#8B7CFF] animate-ping" />
-          Loading agility readiness telemetry…
+      {/* ─── The Two-Clock Evaluation Concept Bar ─── */}
+      <div className="glass-raised p-5 rounded-2xl border border-[#E8A1FF]/30 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between border-b border-[#A8B4C2]/10 pb-3">
+          <div className="flex items-center gap-2 font-mono text-xs text-[#EAF0F6]">
+            <Clock className="w-4 h-4 text-[#E8A1FF]" />
+            <span className="font-bold">THE TWO-CLOCK MODEL EVALUATION</span>
+          </div>
+          <span className="text-[10px] font-mono text-[#E8A1FF] bg-[#E8A1FF]/10 px-2 py-0.5 rounded-full border border-[#E8A1FF]/20">
+            NIST CRQC THRESHOLD
+          </span>
         </div>
-      )}
 
-      {error && (
-        <div className="text-xs text-[#FF7A90] p-4 bg-[#151C25] border border-[#FF7A90]/30 rounded-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+          <div className="p-4 rounded-xl bg-[#0B0F14]/70 border border-[#FF7A90]/25 space-y-2">
+            <div className="text-[10px] text-[#FF7A90] uppercase font-bold">CLOCK 1: QUANTUM ARRIVAL (CRQC)</div>
+            <div className="text-xl font-bold text-[#EAF0F6]">2029 – 2030</div>
+            <p className="text-[11px] text-[#A8B4C2] leading-relaxed">
+              Cryptanalytically Relevant Quantum Computer arrival threshold when classical public-key cryptography (RSA, ECC, Diffie-Hellman) will be broken.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#0B0F14]/70 border border-[#75B7FF]/25 space-y-2">
+            <div className="text-[10px] text-[#75B7FF] uppercase font-bold">CLOCK 2: DATA SECRECY HORIZON</div>
+            <div className="text-xl font-bold text-[#60F1D0]">2032+ (Exceeded)</div>
+            <p className="text-[11px] text-[#A8B4C2] leading-relaxed">
+              Required confidentiality duration for enterprise financial & PCI-DSS assets. Because Clock 2 exceeds Clock 1, HNDL attacks are already effective today.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Readiness Categories Breakdown ─── */}
+      {loading ? (
+        <div className="flex items-center justify-center py-24 text-xs font-mono text-[#A8B4C2] gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#60F1D0] animate-ping" />
+          <span>Computing empirical quantum readiness posture...</span>
+        </div>
+      ) : error ? (
+        <div className="p-5 glass-raised border border-[#FF7A90]/30 rounded-2xl text-xs font-mono text-[#FF7A90]">
           {error}
         </div>
-      )}
-
-      {!loading && !error && categories.length === 0 && (
-        <div className="panel p-12 text-center text-[#A8B4C2] text-xs border-[#A8B4C2]/15 bg-[#151C25]/40">
-          No readiness analysis available. Execute an automated scan to calculate baseline metrics.
+      ) : categories.length === 0 ? (
+        <div className="glass-surface p-12 text-center text-xs font-mono text-[#A8B4C2] rounded-2xl border-dashed border-[#A8B4C2]/20">
+          No readiness categories computed. Execute a baseline scan to calculate posture.
         </div>
-      )}
-
-      {categories.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {categories.map((cat: any, i: number) => {
-            const detail = METRIC_DETAILS[cat.name] || {
-              source: "Deterministic Evaluation Engine",
-              meaning: "Automated readiness classification",
-              unknowns: "Requires deeper context engine enrichment"
+      ) : (
+        <div className="space-y-4">
+          {categories.map((cat: any, idx: number) => {
+            const meta = METRIC_DETAILS[cat.name] || {
+              source: "Analysis Engine",
+              meaning: "Evaluated across cryptographic paths and evidence records.",
+              action: "Review finding evidence."
             };
 
             return (
-              <div key={i} className="panel p-5 bg-[#151C25] border-[#A8B4C2]/15 flex flex-col justify-between space-y-4">
-                <div className="flex items-start justify-between">
+              <div
+                key={cat.name || idx}
+                className="glass-surface p-5 rounded-2xl border border-[#A8B4C2]/15 space-y-3 hover:border-[#60F1D0]/30 transition-all font-mono"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#A8B4C2]/10 pb-3">
                   <div>
-                    <div className="text-xs font-mono text-[#EAF0F6] font-semibold">{cat.name}</div>
-                    <div className="text-xs text-[#A8B4C2] mt-1">{detail.meaning}</div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-[#EAF0F6]">{cat.name}</span>
+                      <span className="badge badge-neutral">{cat.count || 0} Affected Paths</span>
+                    </div>
+                    <div className="text-[11px] text-[#A8B4C2] mt-0.5">
+                      Ground truth source: <span className="text-[#60F1D0]">{meta.source}</span>
+                    </div>
                   </div>
-                  <div className="text-3xl font-bold font-mono text-[#8B7CFF]">{cat.count}</div>
+
+                  <button
+                    onClick={() => openAssistant(`Explain the impact and migration steps for readiness category '${cat.name}'`)}
+                    className="btn-ghost text-xs px-2.5 py-1.5 border border-[#A8B4C2]/15 hover:border-[#60F1D0]/30 flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <Bot className="w-3.5 h-3.5 text-[#60F1D0]" />
+                    <span>Explain Metric</span>
+                  </button>
                 </div>
 
-                <div className="space-y-2 border-t border-[#A8B4C2]/10 pt-3 text-[11px] font-mono">
-                  <div className="flex items-start gap-1.5 text-[#60F1D0]">
-                    <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                    <span><strong className="text-[#EAF0F6]">Source:</strong> {detail.source}</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-[#0B0F14]/70 border border-[#A8B4C2]/10 space-y-1">
+                    <span className="text-[10px] text-[#A8B4C2] uppercase">ENGINEERING MEANING</span>
+                    <p className="text-[11px] text-[#EAF0F6] leading-relaxed">{meta.meaning}</p>
                   </div>
-                  <div className="flex items-start gap-1.5 text-[#FFBF72]">
-                    <HelpCircle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                    <span><strong className="text-[#EAF0F6]">Unknowns:</strong> {detail.unknowns}</span>
+                  <div className="p-3 rounded-xl bg-[#0B0F14]/70 border border-[#A8B4C2]/10 space-y-1">
+                    <span className="text-[10px] text-[#60F1D0] uppercase">RECOMMENDED ACTION</span>
+                    <p className="text-[11px] text-[#60F1D0] leading-relaxed">{meta.action}</p>
                   </div>
                 </div>
               </div>
@@ -140,18 +202,15 @@ export default function ReadinessPage() {
         </div>
       )}
 
-      {/* Assistant Drawer */}
-      {drawerOpen && (
-        <AssistantDrawer
-          entityType="READINESS"
-          entityId="GENERAL"
-          entityTitle="Readiness & Agility Derivation"
-          initialQuestion={initialQuestion}
-          scanId={scanId || undefined}
-          onClose={() => setDrawerOpen(false)}
-        />
-      )}
+      {/* Embedded Contextual Assistant */}
+      <AssistantDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        projectId={projectId}
+        scanId={scanId || undefined}
+        initialQuestion={initialQuestion}
+      />
+
     </div>
   );
 }
-

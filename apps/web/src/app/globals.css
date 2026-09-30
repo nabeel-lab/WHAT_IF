@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 @theme {
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
   --color-background: #0B0F14;
   --color-foreground: #EAF0F6;
   
@@ -34,52 +38,242 @@
   --color-destructive: #FF7A90;
   --color-destructive-foreground: #0B0F14;
   
-  --color-border: rgba(168, 180, 194, 0.15);
-  --color-input: rgba(168, 180, 194, 0.2);
+  --color-border: rgba(168, 180, 194, 0.14);
+  --color-input: rgba(168, 180, 194, 0.18);
   --color-ring: #60F1D0;
   
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 }
 
 @layer base {
   * {
-    border-color: rgba(168, 180, 194, 0.15);
+    border-color: rgba(168, 180, 194, 0.14);
+  }
+  html {
+    color-scheme: dark;
   }
   body {
     background-color: #0B0F14;
     color: #EAF0F6;
-    font-family: inherit;
+    font-family: var(--font-sans);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
   }
   ::selection {
-    background-color: rgba(96, 241, 208, 0.25);
+    background-color: rgba(96, 241, 208, 0.28);
     color: #EAF0F6;
+  }
+
+  /* Refined dark spatial scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(11, 15, 20, 0.8);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(168, 180, 194, 0.2);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(96, 241, 208, 0.4);
   }
 }
 
-/* Spatial Glass Panel Styles */
+/* ─── Spatial Grid & Environmental Atmospheric Backgrounds ─── */
+.spatial-canvas {
+  background-color: #0B0F14;
+  background-image: 
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(96, 241, 208, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 500px at 80% 20%, rgba(139, 124, 255, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 400px at 60% 80%, rgba(117, 183, 255, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 400px 300px at 10% 70%, rgba(232, 161, 255, 0.04) 0%, transparent 60%),
+    linear-gradient(rgba(168, 180, 194, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 180, 194, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+}
+
+.spatial-grid-faint {
+  background-image: 
+    linear-gradient(rgba(168, 180, 194, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 180, 194, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── Liquid Glass Material Hierarchy ─── */
+@keyframes glass-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes glass-refract {
+  0%, 100% { opacity: 0.6; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(2px); }
+}
+@keyframes glass-glow-pulse {
+  0%, 100% { box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 40px -10px rgba(96, 241, 208, 0.08); }
+  50% { box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 60px -10px rgba(96, 241, 208, 0.12); }
+}
+
+/* Depth Level 2: Primary Glass Surface */
+.glass-surface {
+  background: linear-gradient(135deg, rgba(21, 28, 37, 0.82), rgba(28, 38, 50, 0.72), rgba(21, 28, 37, 0.78));
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(168, 180, 194, 0.18);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(96, 241, 208, 0.04);
+  position: relative;
+}
+.glass-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(96, 241, 208, 0.06) 0%, transparent 40%, rgba(139, 124, 255, 0.04) 70%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Depth Level 3: Raised Glass Surface */
+.glass-raised {
+  background: linear-gradient(145deg, rgba(28, 38, 50, 0.88), rgba(21, 28, 37, 0.82));
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  border: 1px solid rgba(168, 180, 194, 0.22);
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 30px rgba(96, 241, 208, 0.03);
+  position: relative;
+}
+.glass-raised::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, transparent 35%, rgba(96, 241, 208, 0.04) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Floating Dock / Instrument Bar */
+.glass-dock {
+  background: linear-gradient(180deg, rgba(17, 24, 32, 0.88), rgba(21, 28, 37, 0.82));
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+  border: 1px solid rgba(168, 180, 194, 0.18);
+  box-shadow: 0 12px 40px -6px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 0 40px rgba(96, 241, 208, 0.04);
+  position: relative;
+}
+.glass-dock::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(96, 241, 208, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Liquid Glass — Ultra-Premium frosted glass with specular reflections */
+.liquid-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(20, 29, 44, 0.72) 25%, rgba(12, 19, 30, 0.85) 100%) !important;
+  backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 
+    0 16px 40px -8px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(96, 241, 208, 0.08),
+    0 0 25px -5px rgba(96, 241, 208, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 28%, rgba(96, 241, 208, 0.06) 55%, transparent 80%, rgba(139, 124, 255, 0.05) 100%);
+  pointer-events: none;
+}
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 5%, rgba(255, 255, 255, 0.4) 30%, rgba(96, 241, 208, 0.6) 50%, rgba(255, 255, 255, 0.4) 70%, transparent 95%);
+  background-size: 200% 100%;
+  animation: glass-shimmer 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Liquid Glass Card — for cards and interactive panels with glass reflection */
+.liquid-glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(22, 33, 49, 0.68) 30%, rgba(14, 22, 35, 0.82) 100%) !important;
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 1rem;
+  box-shadow: 
+    0 8px 30px -4px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 20px 0 rgba(96, 241, 208, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.liquid-glass-card:hover {
+  border-color: rgba(96, 241, 208, 0.45) !important;
+  box-shadow: 
+    0 16px 44px -6px rgba(0, 0, 0, 0.75),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.45),
+    0 0 30px -4px rgba(96, 241, 208, 0.25);
+  transform: translateY(-1px);
+}
+.liquid-glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+/* Legacy panel compatibility aliased to new glass classes */
 .panel {
-  background-color: #151C25;
+  background: linear-gradient(135deg, rgba(21, 28, 37, 0.78), rgba(28, 38, 50, 0.72));
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
   border: 1px solid rgba(168, 180, 194, 0.15);
   border-radius: 0.75rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .panel-raised {
-  background-color: #1C2632;
-  border: 1px solid rgba(168, 180, 194, 0.2);
+  background: linear-gradient(145deg, rgba(28, 38, 50, 0.88), rgba(21, 28, 37, 0.82));
+  backdrop-filter: blur(26px) saturate(1.5);
+  -webkit-backdrop-filter: blur(26px) saturate(1.5);
+  border: 1px solid rgba(168, 180, 194, 0.22);
   border-radius: 0.75rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
 }
 
 .panel-header {
   padding: 0.875rem 1.25rem;
   border-bottom: 1px solid rgba(168, 180, 194, 0.12);
-  background: linear-gradient(to bottom, rgba(28, 38, 50, 0.7), rgba(21, 28, 37, 0.7));
+  background: linear-gradient(to bottom, rgba(28, 38, 50, 0.75), rgba(21, 28, 37, 0.75));
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 }
@@ -88,23 +282,26 @@
   padding: 1.25rem;
 }
 
-/* Investigation Console Data Table Styles */
+/* ─── Technical Data Table ─── */
 .data-table {
   width: 100%;
   font-size: 0.8125rem;
   text-align: left;
   color: #EAF0F6;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .data-table th {
   padding: 0.75rem 1rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   font-size: 0.6875rem;
+  font-family: var(--font-mono);
   color: #A8B4C2;
-  background-color: #1C2632;
-  border-bottom: 1px solid rgba(168, 180, 194, 0.15);
+  background-color: rgba(28, 38, 50, 0.6);
+  border-bottom: 1px solid rgba(168, 180, 194, 0.14);
 }
 
 .data-table td {
@@ -116,61 +313,193 @@
 }
 
 .data-table tr:hover td {
-  background-color: rgba(28, 38, 50, 0.65);
+  background-color: rgba(28, 38, 50, 0.45);
 }
 
-/* Restrained Domain Status Badges */
+/* ─── Semantic Status Badges ─── */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.15rem 0.55rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 9999px;
   font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.025em;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.03em;
   border: 1px solid transparent;
   transition: all 150ms ease;
+  white-space: nowrap;
 }
 
 .badge-neutral {
-  background-color: rgba(168, 180, 194, 0.1);
+  background-color: rgba(168, 180, 194, 0.08);
   color: #A8B4C2;
-  border-color: rgba(168, 180, 194, 0.2);
+  border-color: rgba(168, 180, 194, 0.18);
 }
 
-.badge-success {
+.badge-success, .badge-evidence {
   background-color: rgba(96, 241, 208, 0.12);
   color: #60F1D0;
-  border-color: rgba(96, 241, 208, 0.3);
+  border-color: rgba(96, 241, 208, 0.28);
 }
 
-.badge-warning {
+.badge-warning, .badge-key {
   background-color: rgba(255, 191, 114, 0.12);
   color: #FFBF72;
-  border-color: rgba(255, 191, 114, 0.3);
+  border-color: rgba(255, 191, 114, 0.28);
 }
 
-.badge-danger {
+.badge-danger, .badge-mismatch {
   background-color: rgba(255, 122, 144, 0.12);
   color: #FF7A90;
-  border-color: rgba(255, 122, 144, 0.3);
+  border-color: rgba(255, 122, 144, 0.28);
 }
 
 .badge-analysis {
   background-color: rgba(139, 124, 255, 0.12);
   color: #8B7CFF;
-  border-color: rgba(139, 124, 255, 0.3);
+  border-color: rgba(139, 124, 255, 0.28);
 }
 
 .badge-data {
   background-color: rgba(117, 183, 255, 0.12);
   color: #75B7FF;
-  border-color: rgba(117, 183, 255, 0.3);
+  border-color: rgba(117, 183, 255, 0.28);
+}
+
+.badge-scenario {
+  background-color: rgba(232, 161, 255, 0.12);
+  color: #E8A1FF;
+  border-color: rgba(232, 161, 255, 0.28);
 }
 
 .badge-unknown {
   background-color: rgba(168, 180, 194, 0.05);
   color: #A8B4C2;
-  border-color: rgba(168, 180, 194, 0.2);
+  border-color: rgba(168, 180, 194, 0.18);
   border-style: dashed;
 }
+
+/* ─── Buttons & Controls ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.625rem;
+  background-color: #60F1D0;
+  color: #0B0F14;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  box-shadow: 0 0 18px rgba(96, 241, 208, 0.22);
+  transition: all 180ms ease;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background-color: rgba(96, 241, 208, 0.92);
+  box-shadow: 0 0 24px rgba(96, 241, 208, 0.35);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.625rem;
+  background: rgba(28, 38, 50, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(168, 180, 194, 0.18);
+  color: #EAF0F6;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  transition: all 180ms ease;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background: rgba(28, 38, 50, 1);
+  border-color: rgba(96, 241, 208, 0.35);
+  color: #60F1D0;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #A8B4C2;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #EAF0F6;
+  border-color: rgba(168, 180, 194, 0.15);
+}
+
+/* ─── Ambient Space & Graphical Pipeline Keyframes ─── */
+@keyframes float-slow-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.08); }
+  66% { transform: translate(-25px, 20px) scale(0.95); }
+}
+
+@keyframes float-slow-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(-35px, 35px) scale(1.1); }
+  66% { transform: translate(30px, -20px) scale(0.92); }
+}
+
+@keyframes float-slow-3 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(25px, 25px) scale(1.05); }
+}
+
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cyber-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+
+@keyframes beam-flow {
+  0% { stroke-dashoffset: 60; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-float-1 {
+  animation: float-slow-1 16s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-slow-2 20s ease-in-out infinite;
+}
+
+.animate-float-3 {
+  animation: float-slow-3 14s ease-in-out infinite;
+}
+
+.animate-radar {
+  animation: radar-sweep 4s linear infinite;
+}
+
+.animate-cyber-pulse {
+  animation: cyber-pulse 3s ease-in-out infinite;
+}
+

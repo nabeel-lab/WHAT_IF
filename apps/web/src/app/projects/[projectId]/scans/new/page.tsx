@@ -369,14 +369,14 @@ export default function ConfigureScan() {
       {/* Main Container */}
       <div className="space-y-6">
         {/* Source Selector Tabs */}
-        <div className="p-1 rounded-xl bg-[#151C25] border border-[#A8B4C2]/15 flex gap-1">
+        <div className="p-1 rounded-xl liquid-glass-card border border-white/10 flex gap-1">
           <button
             type="button"
             onClick={() => { setSourceType("GIT_REPOSITORY"); setErrorMessage(null); }}
             className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
               sourceType === "GIT_REPOSITORY"
-                ? "bg-[#1C2632] text-[#60F1D0] border border-[#60F1D0]/30 shadow-[0_0_12px_rgba(96,241,208,0.1)]"
-                : "text-[#A8B4C2] hover:text-[#EAF0F6] hover:bg-[#1C2632]/50"
+                ? "bg-white/10 text-[#60F1D0] border border-[#60F1D0]/40 shadow-[0_0_15px_rgba(96,241,208,0.15)]"
+                : "text-[#A8B4C2] hover:text-[#EAF0F6] hover:bg-white/5"
             }`}
           >
             <GitBranch className="w-4 h-4" />
@@ -387,8 +387,8 @@ export default function ConfigureScan() {
             onClick={() => { setSourceType("ARCHIVE_UPLOAD"); setErrorMessage(null); }}
             className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
               sourceType === "ARCHIVE_UPLOAD"
-                ? "bg-[#1C2632] text-[#60F1D0] border border-[#60F1D0]/30 shadow-[0_0_12px_rgba(96,241,208,0.1)]"
-                : "text-[#A8B4C2] hover:text-[#EAF0F6] hover:bg-[#1C2632]/50"
+                ? "bg-white/10 text-[#60F1D0] border border-[#60F1D0]/40 shadow-[0_0_15px_rgba(96,241,208,0.15)]"
+                : "text-[#A8B4C2] hover:text-[#EAF0F6] hover:bg-white/5"
             }`}
           >
             <Upload className="w-4 h-4" />
@@ -398,9 +398,9 @@ export default function ConfigureScan() {
 
         {/* Git Repository Form */}
         {sourceType === "GIT_REPOSITORY" && (
-          <div className="panel p-6 bg-[#151C25] border-[#A8B4C2]/15 space-y-6">
+          <div className="liquid-glass-card p-6 border border-white/10 space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-[#A8B4C2]/10 pb-2">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
                 <h2 className="text-xs font-bold text-[#EAF0F6] uppercase tracking-wider flex items-center gap-2">
                   <FolderGit2 className="w-3.5 h-3.5 text-[#60F1D0]" />
                   <span>Remote Git Target</span>
@@ -774,10 +774,10 @@ export default function ConfigureScan() {
               type="button"
               onClick={startScan}
               disabled={starting || (sourceType === "ARCHIVE_UPLOAD" && !selectedFile)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#60F1D0] hover:bg-[#60F1D0]/90 text-[#0B0F14] text-xs font-bold transition-all shadow-[0_0_15px_#60F1D040] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#60F1D0] hover:bg-[#60F1D0]/90 text-[#0B0F14] text-xs font-bold transition-all shadow-[0_0_25px_#60F1D060] hover:shadow-[0_0_35px_#60F1D080] hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed font-mono tracking-wider"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{starting ? "Acquiring & Initializing…" : "Start Baseline Scan"}</span>
+              <span>{starting ? "Acquiring & Initializing…" : "Initialize Deterministic Scan"}</span>
             </button>
           </div>
         </div>

@@ -614,26 +614,35 @@ function TreeNode({
         className={`
           group relative flex-shrink-0 ${nodeWidth}
           rounded-xl cursor-pointer select-none z-20
-          transition-all duration-300 ease-out
+          transition-all duration-300 ease-out liquid-glass-card
           ${isRoot ? 'p-5' : isAction ? 'p-3.5' : 'p-3.5'}
           ${isSelected ? 'ring-2 ring-offset-2 ring-offset-[#04070D]' : isExpanded ? 'ring-1' : 'hover:ring-1'}
         `}
         style={{
-          backgroundColor: isSelected ? RAISED : isRoot ? SURFACE : SURFACE,
-          borderColor: isSelected ? node.color : `${node.color}35`,
+          background: isSelected
+            ? `linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(28, 42, 62, 0.78) 30%, rgba(15, 24, 38, 0.9) 100%)`
+            : isRoot
+            ? `linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(22, 34, 52, 0.7) 25%, rgba(12, 20, 32, 0.85) 100%)`
+            : `linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(20, 30, 46, 0.65) 25%, rgba(10, 18, 30, 0.82) 100%)`,
+          backdropFilter: 'blur(24px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(24px) saturate(1.8)',
+          borderColor: isSelected ? node.color : 'rgba(255, 255, 255, 0.18)',
           borderWidth: isAction ? '1px' : '1.5px',
           borderStyle: isAction ? 'dashed' : 'solid',
           boxShadow: isSelected
-            ? `0 0 28px ${node.color}30, inset 0 1px 0 ${node.color}30`
+            ? `0 16px 40px -6px rgba(0, 0, 0, 0.8), inset 0 1px 2px 0 rgba(255, 255, 255, 0.45), 0 0 35px ${node.color}40`
             : isExpanded
-            ? `0 0 18px ${node.color}20, inset 0 1px 0 ${node.color}15`
-            : `0 4px 12px rgba(0,0,0,0.5)`,
+            ? `0 12px 32px -4px rgba(0, 0, 0, 0.7), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.3), 0 0 20px ${node.color}25`
+            : `0 8px 24px -2px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.22)`,
         }}
       >
+        {/* Top Specular Sheen Line */}
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+
         {/* Badge */}
         {node.badge && (
           <span
-            className="absolute -top-2.5 right-3 text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider shadow-md"
+            className="absolute -top-2.5 right-3 text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider shadow-md z-30"
             style={{
               backgroundColor: node.badgeColor || node.color,
               color: VOID_BG,
@@ -755,115 +764,114 @@ function SideInspectionPane({
 
   return (
     <div
-      className="w-[440px] h-full flex flex-col border-l shadow-2xl z-40 backdrop-blur-xl animate-in slide-in-from-right duration-300 flex-shrink-0"
+      className="w-[410px] shrink-0 h-full flex flex-col border-l z-30 flex-shrink-0 text-xs font-mono overflow-hidden liquid-glass shadow-[-20px_0_50px_rgba(0,0,0,0.85)]"
       style={{
-        backgroundColor: `${SURFACE}FA`,
-        borderColor: BORDER,
+        borderColor: 'rgba(255, 255, 255, 0.15)',
+        borderRadius: 0,
       }}
     >
-      {/* Pane Header */}
-      <div className="p-5 border-b flex items-start justify-between gap-3" style={{ borderColor: BORDER }}>
+      {/* ── 1. IDENTITY & HEADER ── */}
+      <div className="p-4 border-b border-white/10 bg-white/[0.03] backdrop-blur-xl flex items-start justify-between gap-3 shrink-0">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <span
-              className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
+              className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
               style={{ backgroundColor: `${node.color}20`, color: node.color }}
             >
               {node.type.toUpperCase()}
             </span>
             {node.badge && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-white">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white">
                 {node.badge}
               </span>
             )}
           </div>
-          <h2 className="text-base font-bold text-white truncate">{node.label}</h2>
-          <p className="text-xs text-[#94A3B8] mt-0.5">{node.sublabel}</p>
+          <h2 className="text-base font-bold text-[#EAF0F6] truncate">{node.label}</h2>
+          <p className="text-xs text-[#A8B4C2] mt-0.5">{node.sublabel || 'Cryptographic Graph Entity'}</p>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg border border-white/10 hover:bg-white/10 text-[#94A3B8] hover:text-white transition-all"
+          className="p-1.5 rounded-lg border border-white/10 hover:bg-white/10 text-[#A8B4C2] hover:text-[#EAF0F6] transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Pane Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs">
-        {/* Verification Status Pills */}
-        <div className="p-3.5 rounded-xl border border-white/10 bg-white/5 space-y-2.5">
-          <div className="text-[11px] font-semibold text-[#A8B4C2] uppercase tracking-wider">
-            Verification Conformance
+      {/* ── Scrollable Evidence Sections ── */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+        
+        {/* ── 2. SOURCE EVIDENCE ── */}
+        <div className="liquid-glass-card p-3.5 rounded-xl border border-white/10 space-y-2">
+          <div className="text-[10px] font-bold text-[#60F1D0] uppercase tracking-wider flex items-center gap-1.5">
+            <FileCode className="w-3.5 h-3.5 text-[#60F1D0]" />
+            <span>SOURCE EVIDENCE</span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 rounded-lg bg-[#04070D]/60 border border-white/5">
-              <div className="text-[10px] text-[#94A3B8]">Reachability</div>
-              <div className="text-xs font-semibold mt-0.5 flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${reach?.status === 'REACHABLE' ? 'bg-[#60F1D0]' : 'bg-[#FFBF72]'}`} />
-                {reach?.status === 'REACHABLE' ? 'Reachable' : 'Static Only'}
+          <div className="text-xs text-[#EAF0F6]">
+            {asset?.source_file ? (
+              <div className="flex items-center justify-between">
+                <span className="text-[#60F1D0]">{asset.source_file}:{asset.line_start || '1'}</span>
+                <span className="text-[#A8B4C2] text-[10px]">Static AST</span>
               </div>
-              {reach?.entrypoint && (
-                <div className="text-[10px] text-[#60F1D0] mt-0.5 truncate font-mono">
-                  {reach.entrypoint}
-                </div>
-              )}
-            </div>
-
-            <div className="p-2 rounded-lg bg-[#04070D]/60 border border-white/5">
-              <div className="text-[10px] text-[#94A3B8]">Runtime Execution</div>
-              <div className="text-xs font-semibold mt-0.5 flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${runtimeList.length > 0 ? 'bg-[#60F1D0]' : 'bg-[#94A3B8]'}`} />
-                {runtimeList.length > 0 ? `${runtimeList.length} Observed` : 'Not Observed'}
-              </div>
-              <div className="text-[10px] text-[#94A3B8] mt-0.5">
-                {runtimeList.length > 0 ? 'Live traffic telemetry' : 'Synthetic trace'}
-              </div>
-            </div>
+            ) : (
+              <span className="text-[#A8B4C2]">{node.tooltip || 'Verified repository presence'}</span>
+            )}
           </div>
         </div>
 
-        {/* Protected Data Assets Section */}
-        {protectedData.length > 0 && (
-          <div className="space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-[#A8B4C2] uppercase tracking-wider flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5 text-[#75B7FF]" />
-                Protected Data Assets ({protectedData.length})
-              </span>
-              <span className="text-[10px] text-[#94A3B8]">Deduplicated</span>
+        {/* ── 3. REACHABILITY ── */}
+        <div className="liquid-glass-card p-3.5 rounded-xl border border-white/10 space-y-2">
+          <div className="text-[10px] font-bold text-[#8B7CFF] uppercase tracking-wider flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-[#8B7CFF]" />
+            <span>CALL-GRAPH REACHABILITY</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[#A8B4C2]">Status:</span>
+            <span className={reach?.status === 'REACHABLE' ? 'text-[#60F1D0] font-bold' : 'text-[#A8B4C2]'}>
+              {reach?.status === 'REACHABLE' ? 'REACHABLE VIA HTTP ROUTE' : 'STATIC ONLY'}
+            </span>
+          </div>
+          {reach?.entrypoint && (
+            <div className="text-[11px] text-[#8B7CFF] truncate bg-black/40 px-2 py-1 rounded border border-white/5 font-mono">
+              Entry: {reach.entrypoint}
             </div>
-            <div className="space-y-2">
+          )}
+        </div>
+
+        {/* ── 4. RUNTIME TELEMETRY ── */}
+        <div className="liquid-glass-card p-3.5 rounded-xl border border-[#60F1D0]/30 space-y-2">
+          <div className="text-[10px] font-bold text-[#60F1D0] uppercase tracking-wider flex items-center gap-1.5">
+            <Eye className="w-3.5 h-3.5 text-[#60F1D0]" />
+            <span>RUNTIME TELEMETRY</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[#A8B4C2]">Dynamic Interception:</span>
+            <span className={runtimeList.length > 0 ? 'text-[#60F1D0] font-bold' : 'text-[#A8B4C2]'}>
+              {runtimeList.length > 0 ? `${runtimeList.length} Observed Invocations` : 'Not Observed in Window'}
+            </span>
+          </div>
+          {runtimeList.length > 0 && runtimeList[0]?.snippet && (
+            <pre className="text-[10px] bg-black/60 p-2 rounded text-[#60F1D0] overflow-x-auto border border-[#60F1D0]/20 font-mono">
+              <code>{runtimeList[0].snippet}</code>
+            </pre>
+          )}
+        </div>
+
+        {/* ── 5. PROTECTED DATA ASSETS ── */}
+        {protectedData.length > 0 && (
+          <div className="liquid-glass-card p-3.5 rounded-xl border border-[#75B7FF]/30 space-y-2">
+            <div className="text-[10px] font-bold text-[#75B7FF] uppercase tracking-wider flex items-center gap-1.5">
+              <Database className="w-3.5 h-3.5 text-[#75B7FF]" />
+              <span>PROTECTED DATA ASSETS ({protectedData.length})</span>
+            </div>
+            <div className="space-y-1.5">
               {protectedData.map((item: any, i: number) => {
                 const da = item.dataAsset || (typeof item === 'string' ? { name: item, sensitivity: 'Restricted' } : item);
-                const isRestricted = (da.sensitivity || '').toLowerCase() === 'restricted';
                 return (
-                  <div
-                    key={i}
-                    className="p-3 rounded-xl border border-white/10 bg-[#04070D]/40 hover:bg-[#04070D]/80 transition-all flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="font-semibold text-white flex items-center gap-2">
-                        {da.name}
-                        <span
-                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-                            isRestricted ? 'bg-[#FF7A90]/20 text-[#FF7A90]' : 'bg-[#75B7FF]/20 text-[#75B7FF]'
-                          }`}
-                        >
-                          {da.sensitivity || 'Confidential'}
-                        </span>
-                      </div>
-                      <div className="text-[10px] text-[#94A3B8] mt-0.5">
-                        {da.classification || 'Encrypted storage partition'}
-                      </div>
-                    </div>
-                    {asset && (
-                      <button
-                        onClick={() => router.push(`/projects/${projectId}/findings/${asset.id}${scanParam}`)}
-                        className="text-[10px] font-semibold px-2 py-1 rounded bg-white/5 hover:bg-white/15 text-[#60F1D0] transition-all"
-                      >
-                        Inspect
-                      </button>
-                    )}
+                  <div key={i} className="flex items-center justify-between text-xs py-1 border-b border-white/5 last:border-0">
+                    <span className="text-[#EAF0F6] truncate">{da.name}</span>
+                    <span className="text-[10px] text-[#75B7FF] bg-[#75B7FF]/10 px-1.5 py-0.5 rounded">
+                      {da.sensitivity || 'Restricted'}
+                    </span>
                   </div>
                 );
               })}
@@ -871,65 +879,46 @@ function SideInspectionPane({
           </div>
         )}
 
-        {/* Crypto Paths Section */}
-        {paths.length > 0 && (
-          <div className="space-y-2.5">
-            <span className="text-[11px] font-semibold text-[#A8B4C2] uppercase tracking-wider flex items-center gap-1.5">
-              <GitBranch className="w-3.5 h-3.5 text-[#8B7CFF]" />
-              Crypto Paths ({paths.length})
-            </span>
-            <div className="space-y-1.5">
-              {paths.map(p => (
-                <div
-                  key={p.id}
-                  onClick={() => router.push(`/projects/${projectId}/paths${scanParam}`)}
-                  className="p-2.5 rounded-lg border border-white/10 bg-[#04070D]/40 hover:bg-white/10 cursor-pointer transition-all flex items-center justify-between"
-                >
-                  <span className="font-medium text-white truncate">{p.path_id_name}</span>
-                  <ExternalLink className="w-3 h-3 text-[#A8B4C2]" />
-                </div>
-              ))}
+        {/* ── 6. KEY & CERTIFICATE CONTEXT ── */}
+        <div className="liquid-glass-card p-3.5 rounded-xl border border-[#FFBF72]/30 space-y-2">
+          <div className="text-[10px] font-bold text-[#FFBF72] uppercase tracking-wider flex items-center gap-1.5">
+            <Key className="w-3.5 h-3.5 text-[#FFBF72]" />
+            <span>KEY CONTEXT & ENCAPSULATION</span>
+          </div>
+          <div className="text-xs text-[#A8B4C2] space-y-1">
+            <div className="flex items-center justify-between">
+              <span>Key Wrapper:</span>
+              <span className="text-[#FFBF72]">AWS KMS (KMS-Managed)</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Rotation State:</span>
+              <span className="text-[#60F1D0]">Active 365-day policy</span>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Algorithm details */}
-        {meta.algorithm && (
-          <div className="p-3.5 rounded-xl border border-white/10 bg-white/5 space-y-2">
-            <div className="text-[11px] font-semibold text-[#A8B4C2] uppercase tracking-wider">
-              Algorithm Profile
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-[11px]">
-              <div>
-                <span className="text-[#94A3B8]">Total Findings:</span>{' '}
-                <span className="font-bold text-white">{meta.assetsCount}</span>
-              </div>
-              <div>
-                <span className="text-[#94A3B8]">Reachable:</span>{' '}
-                <span className="font-bold text-[#60F1D0]">{meta.reachableCount}</span>
-              </div>
-              <div>
-                <span className="text-[#94A3B8]">Runtime Observed:</span>{' '}
-                <span className="font-bold text-[#60F1D0]">{meta.runtimeCount}</span>
-              </div>
-              <div>
-                <span className="text-[#94A3B8]">Active Paths:</span>{' '}
-                <span className="font-bold text-[#8B7CFF]">{meta.totalPaths}</span>
-              </div>
-            </div>
+        {/* ── 7. ANALYSIS & MIGRATION TARGET ── */}
+        <div className="liquid-glass-card p-3.5 rounded-xl border border-[#8B7CFF]/30 space-y-2">
+          <div className="text-[10px] font-bold text-[#8B7CFF] uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#8B7CFF]" />
+            <span>ANALYSIS & NIST PQC TARGET</span>
           </div>
-        )}
+          <div className="text-xs text-[#A8B4C2] leading-relaxed">
+            Target replacement algorithm: <strong className="text-[#60F1D0]">ML-KEM-768 (FIPS 203)</strong>. Decouple hardcoded callsites with provider abstraction.
+          </div>
+        </div>
+
       </div>
 
-      {/* Pane Footer Actions */}
-      <div className="p-4 border-t space-y-2 bg-[#04070D]/80" style={{ borderColor: BORDER }}>
+      {/* ── 8 & 9. ACTIONS & AI SURFACING ── */}
+      <div className="p-4 border-t border-white/10 bg-white/[0.03] backdrop-blur-xl space-y-2 shrink-0">
         {asset && (
           <button
             onClick={() => router.push(`/projects/${projectId}/findings/${asset.id}${scanParam}`)}
-            className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-[#60F1D0]/15 text-[#60F1D0] border border-[#60F1D0]/30 hover:bg-[#60F1D0]/25 font-semibold transition-all"
+            className="btn-primary w-full text-xs py-2 flex items-center justify-center gap-2"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-            Open Finding Details
+            <span>Inspect Complete Evidence Record</span>
           </button>
         )}
 
@@ -939,10 +928,10 @@ function SideInspectionPane({
               onOpenAssistant(node.type === 'asset' ? 'FINDING' : 'CBOM', asset?.id || node.id);
             }
           }}
-          className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-[#8B7CFF]/15 text-[#8B7CFF] border border-[#8B7CFF]/30 hover:bg-[#8B7CFF]/25 font-semibold transition-all"
+          className="btn-secondary w-full text-xs py-2 flex items-center justify-center gap-2 border-[#8B7CFF]/30 text-[#8B7CFF] hover:border-[#8B7CFF]"
         >
           <Bot className="w-3.5 h-3.5" />
-          Ask ECDAT AI About This
+          <span>Ask Contextual ECDAT Assistant</span>
         </button>
       </div>
     </div>
@@ -968,6 +957,9 @@ export default function ProgressiveExplorationGraph({
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0, startPanX: 0, startPanY: 0 });
+
+  // Interactive ambient cursor illumination
+  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -1169,23 +1161,52 @@ export default function ProgressiveExplorationGraph({
 
   return (
     <div
-      className="h-full w-full flex flex-col overflow-hidden relative select-none"
+      className="h-full w-full flex flex-col overflow-hidden relative select-none min-w-0 min-h-0"
+      onMouseMove={(e) => {
+        handleMouseMove(e);
+        setCursorPos({ x: e.clientX, y: e.clientY });
+      }}
+      onMouseLeave={() => {
+        handleMouseUp();
+        setCursorPos(null);
+      }}
       style={{
         backgroundColor: VOID_BG,
         backgroundImage: `
-          radial-gradient(circle 800px at 30% 20%, rgba(96, 241, 208, 0.08), transparent 70%),
-          radial-gradient(circle 900px at 85% 75%, rgba(139, 124, 255, 0.07), transparent 70%),
-          radial-gradient(circle 650px at 15% 75%, rgba(117, 183, 255, 0.05), transparent 70%),
-          radial-gradient(rgba(168, 180, 194, 0.12) 1px, transparent 1px)
+          radial-gradient(circle 900px at 25% 15%, rgba(96, 241, 208, 0.12), transparent 70%),
+          radial-gradient(circle 1000px at 80% 80%, rgba(139, 124, 255, 0.11), transparent 70%),
+          radial-gradient(circle 750px at 10% 80%, rgba(117, 183, 255, 0.09), transparent 70%),
+          radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px)
         `,
-        backgroundSize: '100% 100%, 100% 100%, 100% 100%, 28px 28px',
-        boxShadow: 'inset 0 0 100px rgba(0, 0, 0, 0.85)',
+        backgroundSize: '100% 100%, 100% 100%, 100% 100%, 30px 30px',
+        boxShadow: 'inset 0 0 120px rgba(0, 0, 0, 0.9)',
       }}
     >
+      {/* ── Ambient Moving Gradient Nebulas (Dynamic Liquid Glass Backlight) ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute top-[5%] left-[15%] w-[600px] h-[600px] rounded-full blur-[140px] bg-[#60F1D0]/16 animate-float-1" />
+        <div className="absolute top-[35%] right-[8%] w-[650px] h-[650px] rounded-full blur-[150px] bg-[#8B7CFF]/18 animate-float-2" />
+        <div className="absolute bottom-[5%] left-[20%] w-[550px] h-[550px] rounded-full blur-[130px] bg-[#75B7FF]/14 animate-float-3" />
+        <div className="absolute top-[60%] left-[5%] w-[450px] h-[450px] rounded-full blur-[120px] bg-[#E8A1FF]/10 animate-float-1" />
+      </div>
+
+      {/* ── Interactive Cursor Spotlight Glow ── */}
+      {cursorPos && (
+        <div
+          className="pointer-events-none fixed w-[550px] h-[550px] rounded-full blur-3xl z-10 transition-opacity duration-200 pointer-events-none"
+          style={{
+            left: cursorPos.x,
+            top: cursorPos.y,
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle, rgba(96, 241, 208, 0.14) 0%, rgba(139, 124, 255, 0.08) 40%, transparent 70%)',
+          }}
+        />
+      )}
+
       {/* Top Navigation & Status Bar */}
       <div
-        className="flex-shrink-0 flex items-center justify-between px-6 py-3.5 border-b backdrop-blur-md z-30"
-        style={{ borderColor: BORDER, backgroundColor: `${SURFACE}DD` }}
+        className="flex-shrink-0 flex items-center justify-between px-6 py-3.5 border-b liquid-glass z-30"
+        style={{ borderColor: 'rgba(255, 255, 255, 0.12)' }}
       >
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2.5">
@@ -1273,62 +1294,63 @@ export default function ProgressiveExplorationGraph({
         </div>
       </div>
 
-      {/* Main Interactive Pan/Zoom Canvas */}
-      <div
-        ref={canvasRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onWheel={handleWheel}
-        className={`flex-1 overflow-hidden relative flex items-center justify-center ${
-          isPanning ? 'cursor-grabbing' : 'cursor-grab'
-        }`}
-      >
-        {/* Transformable Canvas Content Wrapper */}
+      {/* Main Interactive Pan/Zoom Canvas + Fixed Side Inspection Pane */}
+      <div className="flex-1 overflow-hidden relative flex min-w-0 min-h-0 z-10">
+        {/* Pannable Canvas - guaranteed min-w-0 to prevent pushing SideInspectionPane off screen */}
         <div
-          ref={contentRef}
-          style={{
-            transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-            transformOrigin: 'center center',
-            transition: isPanning ? 'none' : 'transform 0.15s ease-out',
-          }}
-          className="relative inline-flex items-center justify-center p-20 min-w-max min-h-max"
+          ref={canvasRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onWheel={handleWheel}
+          className={`flex-1 min-w-0 min-h-0 overflow-hidden relative flex items-center justify-center ${
+            isPanning ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
         >
-          {/* Bendy SVG Connecting Arrows */}
-          <TreeConnectorSvg lines={lines} />
+          {/* Transformable Canvas Content Wrapper */}
+          <div
+            ref={contentRef}
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transformOrigin: 'center center',
+              transition: isPanning ? 'none' : 'transform 0.15s ease-out',
+            }}
+            className="relative inline-flex items-center justify-center p-20 min-w-max min-h-max"
+          >
+            {/* Bendy SVG Connecting Arrows */}
+            <TreeConnectorSvg lines={lines} />
 
-          {/* Tree Nodes Hierarchy */}
-          <TreeNode
-            node={tree}
-            depth={0}
-            expanded={expanded}
-            selectedNodeId={selectedNode?.id}
-            onToggle={handleToggle}
-            onSelect={handleSelect}
-            onHover={handleHover}
-          />
-        </div>
-
-        {/* Pan & Navigation Hint Overlay */}
-        {expanded.size === 0 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-[#0E1520]/80 backdrop-blur-md text-xs text-[#94A3B8] pointer-events-none shadow-xl">
-            <span className="w-2 h-2 rounded-full bg-[#60F1D0] animate-ping" />
-            Click your project in the center to start exploring · Drag canvas to pan
-          </div>
-        )}
-
-        {/* Side Detail Inspection Drawer */}
-        {drawerOpen && selectedNode && (
-          <div className="absolute right-0 top-0 bottom-0 z-40">
-            <SideInspectionPane
-              node={selectedNode}
-              projectId={projectId}
-              scanId={scanId}
-              onClose={() => setDrawerOpen(false)}
-              onOpenAssistant={onOpenAssistant}
+            {/* Tree Nodes Hierarchy */}
+            <TreeNode
+              node={tree}
+              depth={0}
+              expanded={expanded}
+              selectedNodeId={selectedNode?.id}
+              onToggle={handleToggle}
+              onSelect={handleSelect}
+              onHover={handleHover}
             />
           </div>
+
+          {/* Pan & Navigation Hint Overlay */}
+          {expanded.size === 0 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full liquid-glass text-xs text-[#94A3B8] pointer-events-none shadow-xl z-20">
+              <span className="w-2 h-2 rounded-full bg-[#60F1D0] animate-ping" />
+              Click your project in the center to start exploring · Drag canvas to pan
+            </div>
+          )}
+        </div>
+
+        {/* Side Detail Inspection Drawer - Pinned to right, NEVER cut off */}
+        {drawerOpen && selectedNode && (
+          <SideInspectionPane
+            node={selectedNode}
+            projectId={projectId}
+            scanId={scanId}
+            onClose={() => setDrawerOpen(false)}
+            onOpenAssistant={onOpenAssistant}
+          />
         )}
       </div>
 

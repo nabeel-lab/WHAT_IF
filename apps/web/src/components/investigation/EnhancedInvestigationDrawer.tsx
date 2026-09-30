@@ -61,14 +61,14 @@ export default function EnhancedInvestigationDrawer({
 
   return (
     <div className="
-      w-[480px] h-full
-      backdrop-blur-2xl
+      w-[420px] max-w-[40vw] h-full
+      liquid-glass
       border-l shadow-2xl
       overflow-y-auto
       flex flex-col
     " style={{
-      backgroundColor: GLASS_SURFACE + 'F5',
       borderColor: MUTED_TEXT + '30',
+      borderRadius: 0,
     }}>
       {/* Header */}
       <div className="

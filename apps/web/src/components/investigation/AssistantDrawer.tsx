@@ -208,57 +208,65 @@ export default function AssistantDrawer({
   };
 
   return (
-    <div className="fixed right-0 top-14 bottom-0 z-50 w-[580px] max-w-full backdrop-blur-3xl border-l shadow-2xl flex flex-col" style={{ backgroundColor: GLASS_SURFACE + 'FA', borderColor: MUTED_TEXT + '30' }}>
+    <div
+      className="fixed right-0 top-14 bottom-0 z-50 w-[460px] max-w-[calc(100vw-280px)] liquid-glass border-l border-white/15 shadow-[-25px_0_60px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden"
+      style={{ borderRadius: 0 }}
+    >
+      {/* Top Specular Rim */}
+      <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none" />
+
       {/* Header */}
-      <div className="sticky top-0 z-20 p-5 border-b flex justify-between items-start" style={{ borderColor: MUTED_TEXT + '20', background: `linear-gradient(to bottom, ${RAISED_GLASS}F5, ${GLASS_SURFACE}F5)` }}>
+      <div className="sticky top-0 z-20 p-4 border-b border-white/10 bg-white/[0.03] backdrop-blur-xl flex justify-between items-start">
         <div>
-          <h2 className="text-lg font-bold flex items-center gap-2 text-[#EAF0F6]">
-            <Bot className="w-5 h-5 text-[#60F1D0]" />
+          <h2 className="text-base font-bold flex items-center gap-2 text-[#EAF0F6]">
+            <Bot className="w-4 h-4 text-[#60F1D0]" />
             Ask ECDAT — Grounded Assistant
           </h2>
-          <div className="text-xs font-mono mt-1 text-[#A8B4C2] flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-[#1C2632] border border-[#A8B4C2]/15 text-[#60F1D0]">
+          <div className="text-[11px] font-mono mt-1 text-[#A8B4C2] flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded bg-[#60F1D0]/15 border border-[#60F1D0]/30 text-[#60F1D0] font-semibold">
               {entityType || (cryptoPathId ? 'CRYPTO_PATH' : 'CONTEXT')}
             </span>
-            <span className="truncate max-w-[280px]">
+            <span className="truncate max-w-[240px]">
               {entityTitle || cryptoPathId || 'Investigation Context'}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <select 
             value={mode} 
             onChange={e => setMode(e.target.value)}
-            className="bg-black/40 border border-slate-700 rounded text-xs text-slate-300 px-2 py-1 outline-none"
+            className="bg-[#141E2B]/80 border border-white/15 rounded-lg text-[11px] font-mono text-[#EAF0F6] px-2 py-1 outline-none"
           >
             <option value="TECHNICAL">Technical</option>
             <option value="EXECUTIVE">Executive</option>
             <option value="EXPLAIN">Explain</option>
             <option value="EVIDENCE">Evidence Focus</option>
           </select>
-          <button onClick={onClose} className="p-1.5 rounded-lg transition-all hover:bg-[#1C2632] text-[#A8B4C2] border border-[#A8B4C2]/20">
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg transition-all hover:bg-white/10 text-[#A8B4C2] hover:text-white border border-white/10"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
         {messages.map(msg => (
           <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${msg.role === 'user' ? 'bg-blue-500/20 text-blue-400' : 'bg-[#60F1D0]/20 text-[#60F1D0]'}`}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
+              msg.role === 'user' ? 'bg-[#75B7FF]/20 text-[#75B7FF] border border-[#75B7FF]/40' : 'bg-[#60F1D0]/20 text-[#60F1D0] border border-[#60F1D0]/40'
+            }`}>
               {msg.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
             </div>
             <div className={`flex flex-col max-w-[88%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
               <div 
-                className="p-4 rounded-2xl text-xs whitespace-pre-wrap leading-relaxed shadow-sm"
-                style={{ 
-                  backgroundColor: msg.role === 'user' ? USER_BLUE + '15' : RAISED_GLASS,
-                  border: `1px solid ${msg.role === 'user' ? USER_BLUE + '30' : MUTED_TEXT + '20'}`,
-                  color: PRIMARY_TEXT,
-                  borderTopRightRadius: msg.role === 'user' ? '4px' : '16px',
-                  borderTopLeftRadius: msg.role === 'assistant' ? '4px' : '16px',
-                }}
+                className={`p-3.5 rounded-2xl text-xs whitespace-pre-wrap leading-relaxed shadow-md border ${
+                  msg.role === 'user'
+                    ? 'bg-[#75B7FF]/15 border-[#75B7FF]/35 text-[#EAF0F6] rounded-tr-sm'
+                    : 'liquid-glass-card border-white/15 text-[#EAF0F6] rounded-tl-sm'
+                }`}
               >
                 {msg.content}
               </div>
@@ -267,12 +275,12 @@ export default function AssistantDrawer({
               {msg.role === 'assistant' && (
                 <div className="mt-3 space-y-2.5 w-full">
                   {msg.evidence && msg.evidence.length > 0 && (
-                    <div className="text-xs space-y-1.5 bg-[#151C25]/80 p-3 rounded-xl border border-[#A8B4C2]/15">
+                    <div className="text-xs space-y-1.5 liquid-glass-card p-3 rounded-xl border border-white/10">
                       <div className="font-mono text-[10px] text-[#A8B4C2] font-semibold uppercase tracking-wider mb-1 flex items-center gap-1.5">
                         <Shield className="w-3 h-3 text-[#60F1D0]" /> Grounded Evidence Provenance
                       </div>
                       {msg.evidence.map((ev, i) => (
-                        <div key={i} className="flex flex-col gap-1 bg-[#1C2632]/70 border border-[#A8B4C2]/10 rounded p-2 text-[11px]">
+                        <div key={i} className="flex flex-col gap-1 bg-white/[0.03] border border-white/10 rounded-lg p-2 text-[11px]">
                           <div className="flex items-center justify-between">
                             {renderProvenanceBadge(ev.source_type)}
                             <span className="font-mono text-[10px] text-[#A8B4C2]">{ev.reference}</span>
@@ -284,7 +292,7 @@ export default function AssistantDrawer({
                   )}
 
                   {msg.unknowns && msg.unknowns.length > 0 && (
-                    <div className="text-xs p-3 rounded-xl bg-[#FF7A90]/10 border border-[#FF7A90]/25 text-[#FF7A90] space-y-1">
+                    <div className="text-xs p-3 rounded-xl bg-[#FF7A90]/10 border border-[#FF7A90]/30 text-[#FF7A90] space-y-1">
                       <div className="font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
                         <AlertCircle className="w-3.5 h-3.5" /> UNKNOWN / UNOBSERVED CONTEXT
                       </div>
@@ -295,13 +303,13 @@ export default function AssistantDrawer({
                   )}
 
                   {msg.related_actions && msg.related_actions.length > 0 && (
-                    <div className="text-xs space-y-1">
+                    <div className="text-xs space-y-1.5">
                       <div className="font-mono text-[10px] text-[#8B7CFF] uppercase font-bold tracking-wider flex items-center gap-1">
                         <Beaker className="w-3 h-3" /> Grounded Action Candidates
                       </div>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1.5">
                         {msg.related_actions.map((act, i) => (
-                          <span key={i} className="bg-[#8B7CFF]/15 border border-[#8B7CFF]/30 text-[#8B7CFF] font-mono text-[10px] px-2 py-0.5 rounded">
+                          <span key={i} className="bg-[#8B7CFF]/15 border border-[#8B7CFF]/35 text-[#8B7CFF] font-mono text-[10px] px-2.5 py-1 rounded-lg hover:border-[#8B7CFF] transition-colors cursor-pointer">
                             {act}
                           </span>
                         ))}
@@ -316,10 +324,10 @@ export default function AssistantDrawer({
 
         {loading && (
           <div className="flex gap-3 flex-row items-center text-xs text-[#A8B4C2]">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-[#60F1D0]/20 text-[#60F1D0]">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-[#60F1D0]/20 text-[#60F1D0] border border-[#60F1D0]/40">
               <Bot className="w-3.5 h-3.5 animate-spin" />
             </div>
-            <div className="p-3 rounded-2xl bg-[#1C2632] border border-[#A8B4C2]/20 font-mono text-[11px] text-[#60F1D0]">
+            <div className="p-3 rounded-2xl liquid-glass-card border border-white/10 font-mono text-[11px] text-[#60F1D0]">
               Assembling grounded context & evidence graph…
             </div>
           </div>
@@ -328,7 +336,7 @@ export default function AssistantDrawer({
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t" style={{ borderColor: MUTED_TEXT + '20', backgroundColor: RAISED_GLASS + '80' }}>
+      <div className="p-4 border-t border-white/10 bg-white/[0.03] backdrop-blur-xl">
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSend(); }}
           className="flex items-center gap-2 relative"
@@ -339,12 +347,12 @@ export default function AssistantDrawer({
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about evidence, reachability, or recommendations..."
             disabled={loading}
-            className="w-full bg-black/40 border border-slate-700/50 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-[#60F1D0]/50 transition-colors"
+            className="w-full bg-[#0B121C]/80 border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-[#60F1D0]/50 transition-colors"
           />
           <button 
             type="submit"
             disabled={!input.trim() || loading}
-            className="absolute right-2 p-1.5 bg-[#60F1D0] hover:bg-[#60F1D0]/90 disabled:bg-slate-700 disabled:text-slate-500 text-black rounded-lg transition-colors"
+            className="absolute right-2 p-1.5 bg-[#60F1D0] hover:bg-[#60F1D0]/90 disabled:bg-slate-700 disabled:text-slate-500 text-black rounded-lg transition-colors font-bold shadow-[0_0_12px_#60F1D040]"
           >
             <Send className="w-3.5 h-3.5" />
           </button>

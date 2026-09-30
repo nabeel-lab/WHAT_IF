@@ -57,18 +57,26 @@ function GlassNode({ data }: GlassNodeProps) {
 
   return (
     <div
-      className="rounded-2xl shadow-2xl backdrop-blur-sm transition-all duration-150 cursor-pointer hover:scale-[1.02] min-w-[280px] max-w-[320px]"
+      className="rounded-2xl shadow-2xl transition-all duration-150 cursor-pointer hover:scale-[1.02] min-w-[280px] max-w-[320px] liquid-glass-card"
       style={{
         ...nodeStyle,
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(16px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(16px) saturate(1.4)',
       }}
       onClick={data.onSelect}
     >
-      {/* Subtle inner highlight for glass effect */}
+      {/* Visible frosted glass gradient overlay */}
       <div 
         className="absolute inset-0 rounded-2xl pointer-events-none"
         style={{
-          background: `linear-gradient(135deg, ${PRIMARY_TEXT}08 0%, transparent 50%)`,
+          background: `linear-gradient(160deg, ${PRIMARY_TEXT}0A 0%, transparent 35%, ${EVIDENCE_TEAL}06 60%, transparent 100%)`,
+        }}
+      />
+      {/* Top edge shimmer line */}
+      <div 
+        className="absolute top-0 left-4 right-4 h-px pointer-events-none"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${PRIMARY_TEXT}20, ${EVIDENCE_TEAL}30, ${PRIMARY_TEXT}20, transparent)`,
         }}
       />
 

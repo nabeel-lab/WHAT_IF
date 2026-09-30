@@ -75,8 +75,8 @@ export default function InvestigationWorkspace() {
   }
 
   return (
-    <div className="h-full w-full flex overflow-hidden relative" style={{ backgroundColor: '#04070D' }}>
-      <div className="flex-1 h-full">
+    <div className="h-full w-full flex overflow-hidden relative min-w-0 min-h-0" style={{ backgroundColor: '#04070D' }}>
+      <div className="flex-1 h-full min-w-0 min-h-0 relative">
         <ProgressiveExplorationGraph
           data={data}
           projectId={projectId}

@@ -35,13 +35,13 @@ export default function InvestigationDrawer({
 
   return (
     <div className="
-      w-[420px] h-full
-      bg-slate-900/95 backdrop-blur-2xl
-      border-l border-slate-700/50
+      w-[420px] max-w-[40vw] h-full
+      liquid-glass
+      border-l border-[#A8B4C2]/15
       shadow-2xl
       overflow-y-auto
       flex flex-col
-    ">
+    " style={{ borderRadius: 0 }}>
       {/* Glass Header */}
       <div className="
         sticky top-0 z-20
